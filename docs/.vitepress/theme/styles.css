@@ -55,13 +55,16 @@ body {
   line-height: 1.85;
 }
 
-.VPHomeHero .image-src {
-  max-width: 300px;
-  max-height: 300px;
-  border: 1px solid var(--ml-border);
-  border-radius: 8px;
-  box-shadow: var(--ml-shadow);
-  background: var(--ml-surface);
+.VPHomeHero .image {
+  display: none !important;
+}
+
+.VPHomeHero.has-image .container {
+  display: block !important;
+}
+
+.VPHomeHero.has-image .main {
+  width: 100% !important;
 }
 
 .VPHome .VPFeature {
