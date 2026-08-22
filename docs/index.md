@@ -2,7 +2,6 @@
 layout: home
 
 hero:
-  name: MaoLaoAPI教程
   text: MaoLao API 新手使用文档
   tagline: 从注册、创建 API Key、选择模型、异步生图到理解计费额度，按真实项目方式整理的一站式教程。
   image:
