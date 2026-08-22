@@ -5,8 +5,8 @@ hero:
   text: MaoLao API 新手使用文档
   tagline: 从注册、创建 API Key、选择模型、异步生图到理解计费额度，按真实项目方式整理的一站式教程。
   image:
-    src: /hero-illustration.svg
-    alt: MaoLao API 文档插画
+    src: /hero-image.png
+    alt: MaoLao API 首页截图
   actions:
     - theme: brand
       text: 快速开始
