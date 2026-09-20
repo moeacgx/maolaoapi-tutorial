@@ -28,9 +28,61 @@ Authorization: Bearer sk-你的API_KEY
 
 任务归属于令牌对应的账号。同一账号下的其他有效令牌可以查询任务，其他账号会得到 `404 task not found`。
 
+## 选择图片模型
+
+新增图片模型可以直接通过请求体的 `model` 字段指定：
+
+| 模型 | 使用说明 |
+| --- | --- |
+| `gpt-image-2.5-flare` | GPT 图片模型，使用下方最小请求示例提交生图任务。 |
+| `gpt-image-2.5-sunburst` | GPT 图片模型，将最小请求示例中的 `model` 替换为此名称。 |
+| `gemini-3-pro-image-preview` | Gemini 图片模型，通过 `size` 选择分辨率，不支持 `quality` 档位。 |
+| `gemini-3.1-flash-image` | Gemini 图片模型，通过 `size` 选择分辨率，不支持 `quality` 档位。 |
+
+模型是否可用取决于 API Key 对应的分组，请使用控制台中的完整模型名。
+
+::: warning Gemini 不支持 quality 档位
+使用上述两个 Gemini 模型时，请直接省略 `quality` 字段，通过 `size` 选择分辨率。如果客户端默认附加质量参数，也需要关闭该选项。仅将 GPT 示例中的模型名改成 Gemini、保留 `quality`，会导致参数错误。
+:::
+
+### GPT 2.5 最小生图示例
+
+```bash
+curl -X POST "https://api.maolaoapi.cc/v1/images/tasks" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gpt-image-2.5-flare",
+    "prompt": "一只坐在月球上的橘猫，电影级光影",
+    "n": 1,
+    "response_format": "b64_json"
+  }'
+```
+
+使用 `gpt-image-2.5-sunburst` 时，将 `model` 改为该名称即可。两个新模型的尺寸、质量档位和编辑输入限制以控制台说明为准，不要直接套用下文旧 GPT Enterprise 模型的参数限制。
+
+### Gemini 生图示例
+
+以下请求省略 `quality`，用 `size` 指定输出尺寸。其他分辨率请使用控制台为该模型列出的 `size` 值。
+
+```bash
+curl -X POST "https://api.maolaoapi.cc/v1/images/tasks" \
+  -H "Authorization: Bearer YOUR_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "model": "gemini-3-pro-image-preview",
+    "prompt": "一只坐在月球上的橘猫，电影级光影",
+    "size": "1024x1024",
+    "n": 1,
+    "response_format": "b64_json"
+  }'
+```
+
+使用 `gemini-3.1-flash-image` 时，将 `model` 改为该名称，继续省略 `quality`。提交后按下文使用 `task_id` 查询状态并下载结果。
+
 ## 提交图片生成任务
 
-不传 `action` 时，默认创建图片生成任务。请求体与 `/v1/images/generations` 保持兼容。
+不传 `action` 时，默认创建图片生成任务。请求体与 `/v1/images/generations` 保持兼容。下面以旧版 `gpt-image-2-enterprise` 为例；切换模型时，请同时检查该模型支持的参数。
 
 ```bash
 curl -X POST "https://api.maolaoapi.cc/v1/images/tasks" \
@@ -92,8 +144,8 @@ Grok 生图示例：
 | `model` | 图片模型名称。建议始终显式填写。 |
 | `prompt` | 图片描述或编辑指令。 |
 | `n` | 请求图片数量，默认 1。实际交付数量以 `result.data.length` 为准。 |
-| `size` | GPT Enterprise 模型不传时默认 `1024x1024`。 |
-| `quality` | GPT Enterprise 模型不传时默认 `medium`。 |
+| `size` | 选择输出尺寸或分辨率，支持值随模型变化。GPT Enterprise 模型不传时默认 `1024x1024`；Gemini 图片模型通过此参数选择分辨率。 |
+| `quality` | GPT Enterprise 模型不传时默认 `medium`。`gemini-3-pro-image-preview` 和 `gemini-3.1-flash-image` 不支持此参数，请直接省略，通过 `size` 选择分辨率。 |
 | `response_format` | 建议使用 `b64_json`，结果会转换成站内图片内容地址。 |
 
 ## 单图输入编辑
@@ -250,7 +302,7 @@ curl -X POST "https://api.maolaoapi.cc/v1/images/tasks" \
   }'
 ```
 
-支持 `imagen-*` 以及映射后为 `imagen-*` 的业务别名；暂不支持 Gemini 原生 `contents`、`parts`、`generationConfig` 请求体。
+本节示例仅适用于 `imagen-*` 以及映射后为 `imagen-*` 的业务别名，不适用于上述两个 Gemini 图片模型；不要将这里的 `quality` 参数复制到 Gemini 请求中。暂不支持 Gemini 原生 `contents`、`parts`、`generationConfig` 请求体。
 
 ## 错误与保留时间
 
@@ -265,6 +317,22 @@ curl -X POST "https://api.maolaoapi.cc/v1/images/tasks" \
 | `404` | 任务、图片序号不存在，或任务不属于当前账号 |
 | `410` | 图片正文已经过期 |
 | `413` | 请求超过上传限制 |
+
+### Gemini 提示不支持 quality 档位
+
+使用 `gemini-3-pro-image-preview` 或 `gemini-3.1-flash-image` 时，如果看到以下错误：
+
+```text
+status_code=400, Gemini 不支持 quality 档位，请通过 size 选择分辨率
+```
+
+请删除请求中的 `quality` 字段，通过 `size` 选择分辨率，然后重新提交任务。不要把 `quality` 改成 `low`、`medium`、`high` 或 `2K`；这些都不能解决该错误。
+
+如果使用第三方客户端，检查它是否自动附加了质量档位；关闭该选项，并确认实际发出的请求不包含 `quality`。从 GPT 示例切换到 Gemini 模型时，也需要删除示例中的 `quality`。
+
+异步请求返回 `202` 只表示任务已接收，仍需检查轮询结果；如果任务变为 `failed`，按任务中的错误信息修正参数后重新提交。
+
+### 其他错误与内容过期
 
 错误响应示例：
 

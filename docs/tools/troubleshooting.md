@@ -30,6 +30,18 @@
 4. 换备用 API 地址测试。
 5. 到控制台日志里看失败原因和实际扣费情况。
 
+## Gemini 生图报 400：不支持 quality 档位
+
+`gemini-3-pro-image-preview` 和 `gemini-3.1-flash-image` 不支持 `quality` 档位。如果出现以下错误：
+
+```text
+status_code=400, Gemini 不支持 quality 档位，请通过 size 选择分辨率
+```
+
+删除请求中的 `quality` 字段，通过 `size` 选择分辨率后重新提交。客户端自动附加的质量档位也需要关闭，不要尝试把 `quality` 改成另一个档位。
+
+请求示例和异步任务错误处理见 [异步生图任务](/images-tasks)。
+
 ## Codex 频繁 Reconnect
 
 Codex CLI 或 Codex Desktop 频繁出现 `Reconnect` / `Reconnecting...` 时，优先检查本机代理配置。
