@@ -22,6 +22,7 @@ export default defineConfig({
       { text: "API Key", link: "/api-key" },
       { text: "计费与额度", link: "/billing-quota" },
       { text: "异步生图", link: "/images-tasks" },
+      { text: "TypeSafe / Jev", link: "/typesafe-jev" },
       { text: "工具接入", link: "/tools/" },
       { text: "账户与订阅", link: "/account/" },
     ],
@@ -39,6 +40,7 @@ export default defineConfig({
         text: "API 教程",
         items: [
           { text: "异步生图任务", link: "/images-tasks" },
+          { text: "TypeSafe / Jev API", link: "/typesafe-jev" },
         ],
       },
       {

@@ -43,3 +43,5 @@ MaoLao API 是一个 AI 模型聚合与分发网关。它把不同模型服务�
 ## 阅读顺序
 
 建议从 [快速开始](/quick-start) 开始，完成一次最小可用调用；然后阅读 [创建 API Key](/api-key) 和 [计费与额度](/billing-quota)。需要图片生成时，继续看 [异步生图任务](/images-tasks)。如果你已经会配置客户端，可以直接进入 [工具接入](/tools/) 查看对应软件的图文教程。
+
+需要分类、判断或评分时，阅读 [TypeSafe / Jev API](/typesafe-jev)，使用同步接口获取结构化结果。

@@ -20,3 +20,8 @@ pnpm docs:build
 - MaoLao API 新手快速开始、API Key、计费与额度。
 - 常见工具接入教程。
 - 异步生图任务、轮询和图片内容下载教程。
+- [TypeSafe / Jev API](docs/typesafe-jev.md)：同步结构化判断、三种题型、鉴权、调用示例与错误处理。
+
+## 文档维护记录
+
+- [MAO-5：TypeSafe / Jev API 文档](docs/workflows/2026-09/25_mao_5_typesafe_jev.md)。
